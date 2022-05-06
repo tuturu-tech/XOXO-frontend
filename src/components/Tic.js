@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-
-const Cell = ({ handleClick, cells, num }) => {
-	return (
-		<td
-			onClick={handleClick}
-			className='border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-1 ring-black text-3xl'>
-			{cells[num]}
-		</td>
-	);
-};
+import Cell from "./Game/Cell.js";
 
 const Tic = () => {
 	const [turn, setTurn] = useState("x");
@@ -34,7 +25,7 @@ const Tic = () => {
 		};
 
 		const filledSpots = squares.filter(
-			(square) => square === "x" || square === "o"
+			(square) => square === 1 || square === 3
 		);
 		if (filledSpots.length === 9) {
 			setWinner("draw");
@@ -44,9 +35,9 @@ const Tic = () => {
 		for (let combo in combos) {
 			combos[combo].forEach((pattern) => {
 				if (
-					squares[pattern[0]] === "" ||
-					squares[pattern[1]] === "" ||
-					squares[pattern[2]] === ""
+					squares[pattern[0]] === 0 ||
+					squares[pattern[1]] === 0 ||
+					squares[pattern[2]] === 0
 				) {
 				} else if (
 					squares[pattern[0]] === squares[pattern[1]] &&
@@ -71,10 +62,10 @@ const Tic = () => {
 		let squares = [...cells];
 		if (turn === "x") {
 			setTurn("o");
-			squares[num] = "x";
+			squares[num] = 1;
 		} else {
 			setTurn("x");
-			squares[num] = "o";
+			squares[num] = 3;
 		}
 		checkForWinner(squares);
 		setCells(squares);
@@ -83,7 +74,6 @@ const Tic = () => {
 	return (
 		<div className='flex flex-col items-center justify-center'>
 			<table className='w-fit mx-auto'>
-				<h2 className='text-2xl py-2'>Turn: {turn}</h2>
 				<tbody>
 					<tr>
 						<Cell handleClick={() => handleClick(0)} num={0} cells={cells} />
