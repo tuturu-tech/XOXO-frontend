@@ -4,7 +4,7 @@ export const config = {
 	maxSupply: 3000,
 	maxSupplyEach: 1500,
 	purchaseLimit: 1,
-	erc721Address: "0xA76B21bcE509F3aE9158b4Fb86c5eEf2E4D5995A",
+	erc721Address: "0x27246704E9aF1d95AEf09CfD72Ff7a0115673c11",
 	chainId: 4,
 	validChainname: "Rinkeby Testnet",
 	...configOverrides,

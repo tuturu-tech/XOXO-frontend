@@ -50,11 +50,7 @@ const Games = () => {
 						<button
 							onClick={() => {
 								setModalOpen(true);
-								setGame(
-									openGames.filter(
-										(item) => Number(item.gameId) === Number(index)
-									)[0]
-								);
+								setGame(game.gameId);
 							}}
 							className='btnGradient mt-2'
 							key={index}>
@@ -66,6 +62,17 @@ const Games = () => {
 					<h2 className='textGradient font-bold text-3xl text-center mt-5'>
 						Active games
 					</h2>
+					{activeGames?.map((game, index) => (
+						<button
+							onClick={() => {
+								setModalOpen(true);
+								setGame(game.gameId);
+							}}
+							className='btnGradient mt-2'
+							key={index}>
+							Game: {game.gameId}
+						</button>
+					))}
 				</div>
 			</div>
 			<button className='btnGradient my-5'>Create a game</button>
