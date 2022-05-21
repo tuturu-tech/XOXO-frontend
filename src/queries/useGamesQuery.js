@@ -1,5 +1,6 @@
 import { useContracts } from "../hooks";
 import { useChainQuery } from "../hooks/useChainQuery";
+import { usePriorityAccount } from "../lib";
 import bigInt from "big-integer";
 
 const key = "GamesState";
@@ -12,7 +13,7 @@ const initialState = {
 	withdrawalAddress: "",
 };
 
-function parseGames(games) {
+function parseGames(games, erc721) {
 	let parsedGames = games.map((game, index) => {
 		let bitArray = bigInt(game.toString()).toString(2);
 		let bitLength = bitArray.length;
@@ -42,12 +43,40 @@ function parseGames(games) {
 	return parsedGames;
 }
 
+function getImages(totalSupply, erc721) {
+	let tokens = [...Array(totalSupply).keys()].map((x) => ++x);
+	let promises = tokens.map((item) =>
+		erc721.getImage(item).then((result) => result)
+	);
+	return Promise.all(promises).then((result) =>
+		result.map((item, index) => {
+			return {
+				id: index + 1,
+				image: item,
+			};
+		})
+	);
+}
+
 export function useGamesQuery() {
 	const { erc721 } = useContracts();
+	const account = usePriorityAccount();
 
-	const fetchState = async () => ({
-		games: parseGames(await erc721.getAllGames()),
-	});
+	const fetchState = async () => {
+		const games = parseGames(await erc721.getAllGames(), erc721);
+		const userTokens = account
+			? (await erc721.tokenIdsOf(account, 2)).map((item) => Number(item))
+			: [];
+		const totalSupply = Number(await erc721.totalSupply());
+		const tokenImages =
+			totalSupply !== 0 ? await getImages(totalSupply, erc721) : [];
+
+		return {
+			games,
+			userTokens,
+			tokenImages,
+		};
+	};
 
 	return useChainQuery({ key, fetchState, initialState });
 }

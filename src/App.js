@@ -6,11 +6,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "animate.css";
 import { WOW } from "wowjs";
 
-import Tic from "./components/Tic";
 import Home from "./components/Home";
 import Games from "./components/Games";
 import Mint from "./components/Mint";
-import Game from "./components/Game/Game";
+import MyGames from "./components/MyGames";
 
 function App() {
 	useEffect(() => {
@@ -27,7 +26,7 @@ function App() {
 								<Route path='/' element={<Home />} />
 								<Route path='/mint' element={<Mint />} />
 								<Route path='/games' element={<Games />} />
-								<Route path='/games/:id' element={<Game />} />
+								<Route path='/my-games' element={<MyGames />} />
 							</Routes>
 						</div>
 					</ConfettiProvider>

@@ -9,6 +9,7 @@ const GameModal = ({ game }) => {
 	const [selectedNFT, setSelectedNFT] = useState(undefined);
 	const [playingMove, setPlayingMove] = useState(false);
 	const [thisGame, setThisGame] = useState(undefined);
+	const [images, setImages] = useState([]);
 	const [joiningGame, setJoiningGame] = useState(false);
 	const [endingGame, setEndingGame] = useState(false);
 
@@ -16,13 +17,22 @@ const GameModal = ({ game }) => {
 	const signer = provider?.getSigner();
 
 	const { erc721, handleTxError, handleTx } = useContracts();
-	const [{ games }, updateGamesState] = useGamesQuery();
+	const [{ games, tokenImages }, updateGamesState] = useGamesQuery();
 
 	useEffect(() => {
 		if (games?.length > 0) {
-			setThisGame(
-				games.filter((item) => Number(item.gameId) === Number(game))[0]
-			);
+			const gameObj = games.filter(
+				(item) => Number(item.gameId) === Number(game)
+			)[0];
+			setThisGame(gameObj);
+			let arr = [];
+			arr[0] = tokenImages
+				.filter((item) => Number(item.id) === Number(gameObj.playerOne))
+				.map((item) => item.image)[0];
+			arr[1] = tokenImages
+				.filter((item) => Number(item.id) === Number(gameObj.playerTwo))
+				.map((item) => item.image)[0];
+			setImages(arr);
 		}
 	}, [games]);
 
@@ -43,7 +53,7 @@ const GameModal = ({ game }) => {
 		setJoiningGame(true);
 		erc721
 			.connect(signer)
-			.joinGame(Number(game), 2)
+			.joinGame(Number(game), 3)
 			.then(handleTx)
 			.then(updateGamesState)
 			.catch(handleTxError)
@@ -64,9 +74,8 @@ const GameModal = ({ game }) => {
 				setTimeout(() => setEndingGame(false), 300);
 			});
 	};
-
 	return (
-		<div className='text-2xl text-white flex flex-col items-center h-screen bg-base'>
+		<div className='text-2xl text-white flex flex-col items-center h-screen w-full bg-base'>
 			{thisGame && (
 				<div className='flex flex-col w-10/12 mt-10'>
 					<h2 className='textGradient font-bold text-center'>Turn</h2>
@@ -83,11 +92,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[8]) === 2
-										? "X"
-										: Number(thisGame.board[8]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[8]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[8]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 								<td
 									onClick={() => setSelectedCell(7)}
@@ -96,11 +107,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[7]) === 2
-										? "X"
-										: Number(thisGame.board[7]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[7]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[7]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 								<td
 									onClick={() => setSelectedCell(6)}
@@ -109,11 +122,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[6]) === 2
-										? "X"
-										: Number(thisGame.board[6]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[6]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[6]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 							</tr>
 							<tr>
@@ -124,11 +139,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[5]) === 2
-										? "X"
-										: Number(thisGame.board[5]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[5]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[5]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 								<td
 									onClick={() => setSelectedCell(4)}
@@ -137,11 +154,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[4]) === 2
-										? "X"
-										: Number(thisGame.board[4]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[4]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[4]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 								<td
 									onClick={() => setSelectedCell(3)}
@@ -150,11 +169,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[3]) === 2
-										? "X"
-										: Number(thisGame.board[3]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[3]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[3]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 							</tr>
 							<tr>
@@ -165,11 +186,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[2]) === 2
-										? "X"
-										: Number(thisGame.board[2]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[2]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[2]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 								<td
 									onClick={() => setSelectedCell(1)}
@@ -178,11 +201,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[1]) === 2
-										? "X"
-										: Number(thisGame.board[1]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[1]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[1]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 								<td
 									onClick={() => setSelectedCell(0)}
@@ -191,11 +216,13 @@ const GameModal = ({ game }) => {
 											? "ring-purple-500 ring-2"
 											: ""
 									} border-[1px] w-28 h-28 m-1 cursor-pointer hover:ring-2 ring-purple-500 text-3xl text-center`}>
-									{Number(thisGame.board[0]) === 2
-										? "X"
-										: Number(thisGame.board[0]) === 3
-										? "O"
-										: ""}
+									{Number(thisGame.board[0]) === 2 ? (
+										<img src={images[0]} alt='tic tac toe field 9' />
+									) : Number(thisGame.board[0]) === 3 ? (
+										<img src={images[1]} alt='tic tac toe field 9' />
+									) : (
+										""
+									)}
 								</td>
 							</tr>
 						</tbody>

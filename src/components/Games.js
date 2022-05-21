@@ -6,6 +6,7 @@ import { useContracts } from "../hooks";
 import { LoadingButton } from "../lib";
 import { Link } from "react-router-dom";
 import GameModal from "./Game/GameModal";
+import CreateGame from "./CreateGame";
 
 const Games = () => {
 	const provider = usePriorityProvider();
@@ -13,9 +14,10 @@ const Games = () => {
 	const [game, setGame] = useState(null);
 	const [openGames, setOpenGames] = useState([]);
 	const [activeGames, setActiveGames] = useState([]);
+	const [openCreateModal, setOpenCreateModal] = useState(false);
 
 	const { erc721, handleTxError, handleTx } = useContracts();
-	const [{ games }, updateGamesState] = useGamesQuery();
+	const [{ games, userTokens }, updateGamesState] = useGamesQuery();
 
 	const signer = provider?.getSigner();
 
@@ -27,22 +29,28 @@ const Games = () => {
 			);
 		}
 	}, [games]);
+	console.log(userTokens);
 
 	return (
 		<div className='flex flex-col items-center text-white h-screen'>
-			<Navigation />
+			<Navigation
+				myGames={provider !== undefined}
+				games={provider !== undefined}
+			/>
 			{modalOpen && (
 				<Modal onClose={() => setModalOpen(false)} className=''>
 					<GameModal game={game} />
 				</Modal>
 			)}
-			<div className='flex flex-row justify-between w-10/12 px-10 mt-20 h-full'>
-				<div className='flex flex-col items-center border-2 border-white/50 flex-1 mx-5'>
-					<h2 className='textGradient font-bold text-3xl text-center mt-5'>
-						My games
-					</h2>
-				</div>
-				<div className='flex flex-col items-center border-2 border-white/50 flex-1 mx-5'>
+			{openCreateModal && (
+				<Modal onClose={() => setOpenCreateModal(false)} className=''>
+					<CreateGame />
+				</Modal>
+			)}
+			<h1 className='textGradient font-bold text-4xl mt-10'>All games</h1>
+
+			<div className='flex flex-row justify-between w-10/12 px-10 mt-10 h-full'>
+				<div className='flex flex-col items-center border-2 border-white/50 flex-1 mx-5 rounded-md'>
 					<h2 className='textGradient font-bold text-3xl text-center mt-5'>
 						Open games
 					</h2>
@@ -58,7 +66,7 @@ const Games = () => {
 						</button>
 					))}
 				</div>
-				<div className='flex flex-col items-center border-2 border-white/50 flex-1 mx-5'>
+				<div className='flex flex-col items-center border-2 border-white/50 flex-1 mx-5 rounded-md'>
 					<h2 className='textGradient font-bold text-3xl text-center mt-5'>
 						Active games
 					</h2>
@@ -75,7 +83,11 @@ const Games = () => {
 					))}
 				</div>
 			</div>
-			<button className='btnGradient my-5'>Create a game</button>
+			<button
+				onClick={() => setOpenCreateModal(true)}
+				className='btnGradient my-5'>
+				Create a game
+			</button>
 		</div>
 	);
 };

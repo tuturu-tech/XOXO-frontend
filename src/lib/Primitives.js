@@ -114,7 +114,7 @@ export function Button({
 		<button
 			disabled={disabled}
 			className={cn(
-				"rounded-xl px-4 py-2 text-white select-none ",
+				"rounded-md px-4 py-2 text-white select-none ",
 				"transition-all duration-300 ",
 				disabled
 					? variant === "text"
